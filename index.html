@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <title>PDF在线阅读器</title>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <a href="javascript:;" class="title">
+                <p>PDF在线阅读器</p>
+            </a>
+        </div>
+        
+    </div>
+    <div class="main">
+        <div class="left" id="left">
+
+        </div>
+        <div class="right" id="right">
+            <embed id="mainpdf" src="" type="application/pdf" class="mainpdf"></body>
+        </div>
+    </div>
+
+</body>
+<script src="./lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="/js/pdfobject.js" ></script>
+<script>
+    let ress;
+    let base;
+    let ul = '';
+    let url = '';
+    let mainpdf = document.getElementById("mainpdf");
+    function appednMenu(data) {
+        if(!data){
+            console.log(1);
+        } else {
+            data.forEach(function (item,index) {  
+                ul += "<li class='left-con left-bar' onclick = \"toPdf('"+ index +"')\">"+item.short+"</li>"
+                console.log(index);
+            })
+        }
+        
+    }
+    toPdf = (index) => {
+        console.log(index)
+        $.post("pdf",
+        {
+            index
+        },
+        (data,status) => {
+            console.log(data) 
+            mainpdf.src = data;
+        });
+        // urlres = ress[temp].full;
+        // urlres = urlres.replace(/\\/g,"/");
+        // console.log(urlres);
+        // PDFObject.embed("./pdf/1.pdf", "#right");
+        // new PDFObject({
+    	//     url: urlres ,
+    	//     }).embed("right")
+    }
+    window.onload = () => {
+        $.get("server", function(result){
+            ress = JSON.parse(result);
+            ress = ress.childFiles;
+            appednMenu(ress);
+            document.getElementById('left').innerHTML = ul;
+            console.log(ress);
+        });
+    }
+    
+    
+    
+</script>
+</html>
